@@ -1,0 +1,36 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}HealthCenter{% endblock %}
+
+{% block navbar %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+ <div class="navbar navbar-dark bg-primary" id="div_nav" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" id="nav_text" href="/">HealthCenter</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/" id="nav_text">Betegségek</a></li>
+                <li><a href="/" id="nav_text">Gyógyszerek</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/login" id="nav_text">Bejelentkezés</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% block page_content %}
+    {% endblock %}
+</div>
+{% endblock %}
