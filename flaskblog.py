@@ -1,13 +1,16 @@
 from flask import Flask, render_template, url_for, request, session, redirect
 import bcrypt
 import pymongo
+import re
 
 app = Flask(__name__)
 
 connection = pymongo.MongoClient("mongodb://localhost")
 
-db = connection.users
-registered = db.registered
+db = connection.patika
+registered = db.felhasznalok
+gyogyszerek=db.gyogyszerek
+betegsegek=db.betegsegek
 
 posts = [
     {
@@ -27,16 +30,52 @@ posts = [
 @app.route('/')
 @app.route('/home')
 def home():
+    if (request.args.get('kijelentkezes')==""):
+        session.clear()
     return render_template('home.html', posts = posts)
 
 
-@app.route('/gyogyszer')
+@app.route('/gyogyszer', methods = ['GET', 'POST'])
 def gyogyszer():
-    if 'username' in session:
-        return render_template('gyogyszer.html', title = "Gyógyszerek")
+    photo = request.form
+    if 'uj_gyogyszer' in photo:
+        return redirect(url_for('gyogyszer_felvetele'))
+    gyogyszer_neve = request.args.get('gyogyszer_neve', '').strip()
+    print(gyogyszer_neve)
+    talalati_lista_darab=gyogyszerek.find({'nev': {'$regex': '.*'+re.escape(gyogyszer_neve)+'.*','$options': 'i'}}).count()
+    gyogyszerek_listaja=gyogyszerek.find({'nev': {'$regex': '.*'+re.escape(gyogyszer_neve)+'.*','$options': 'i'}})
+    context = {
+        'title': 'Gyógyszerek',
+        'gyogyszer_neve': gyogyszer_neve,
+        'gyogyszerek_listaja': gyogyszerek_listaja,
+        'lista_darabszam' : talalati_lista_darab
+    }
+    
+    return render_template('gyogyszer.html',**context)
 
     return render_template('login_required.html', title = "Bejelentkezés szükséges")
 
+
+@app.route('/gyogyszer_felvetele')
+def gyogyszer_felvetele():
+    betegsegek_listaja=betegsegek.find()
+    context = {
+        'title': 'Gyógyszerek felvétele',
+        'betegsegek': betegsegek_listaja
+    }
+    if 'username' in session:
+        nev=request.args.get('nev');
+        ar=request.args.get('ar');
+        kiszereles=request.args.get('kiszereles');
+        betegseg=request.args.getlist('betegseg');
+        betegseg=list(map(int, betegseg))
+        print("ez: ",nev)
+        if(nev=="None"):
+           gyogyszerek.insert_one({'nev':nev,'ar':int(ar),'kiszereles':int(kiszereles),'betegsegre_jo':betegseg})
+        return render_template('gyogyszer_felvetele.html', **context)
+            
+
+    return render_template('login_required.html', title = "Bejelentkezés szükséges")
 
 @app.route('/betegseg')
 def betegsek():
@@ -53,10 +92,10 @@ def login():
 
 @app.route('/loginproc', methods = ['POST'])
 def handle_login():
-    login_user = registered.find_one({'name': request.form['username']})
+    login_user = registered.find_one({'nev': request.form['username']})
 
     if login_user:
-        if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password']) == login_user['password']:
+        if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['jelszo']) == login_user['jelszo']:
             session['username'] = request.form['username']
             return redirect(url_for('home'))
 

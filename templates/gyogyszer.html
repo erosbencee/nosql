@@ -1,4 +1,24 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Gyógyszerek</h1>
+<form method="POST">
+    <h1 style="display: inline-block">Gyógyszerek</h1> 
+    <input type="submit" name="uj_gyogyszer" value="Gyógyszer felvétele"><br>
+</form>
+<form>
+    Kereső: <input type="text" name="gyogyszer_neve">
+    <input type="submit" value="Keresés">
+</form>
+    {% if gyogyszer_neve%}
+    Keresett szó: {{ gyogyszer_neve }} <br>
+
+   
+
+    {% if lista_darabszam ==0 %}
+    Nem található gyógyszer a keresett szó alapján. :(
+    {% endif %}
+    {% endif %}
+    {% for doc in gyogyszerek_listaja %}
+    {{ doc.nev }} <br>
+    {% endfor %}
+    
 {% endblock content %}

@@ -30,7 +30,13 @@
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
+                
+                {% if 'username' in session: %}
+                <a class="nav-item nav-link" href="/home?kijelentkezes">Kijelentkezés</a>
+                {% else %}
                 <a class="nav-item nav-link" href="/login">Bejelentkezés</a>
+                {% endif %}
+
                 <!--<a class="nav-item nav-link" href="/register">Register</a>-->
             </div>
             </div>
