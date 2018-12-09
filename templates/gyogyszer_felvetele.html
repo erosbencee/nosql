@@ -16,8 +16,9 @@
             </div>
             <div class="form-group">
                     <label>Betegségek, amikre jó:</label>
+                    <input type="text" placeholder="Keresés" name="kereso" id="keres">
                     {% for doc in betegsegek %}
-                    <input  type="checkbox"  name="betegseg"  value="{{ doc['_id']|int }}">{{doc['betegseg_neve']}}
+                    <input  type="checkbox"  name="betegseg" class="betegseg"  value="{{ doc['_id']|int }}"><span>{{doc['betegseg_neve']}}</span>
                     {% endfor %}
                 </div>
                 
@@ -33,4 +34,20 @@
     {% for doc in gyogyszerek_listaja %}
     {{ doc.nev }}
     {% endfor %}
+    <script>
+    $('#keres').on('keyup', function(){
+        var keres=$('#keres').val();
+        check=$('input[type="checkbox"]');
+        check.each(function(){
+            var text=$(this).next('span').text();
+            if(text.toUpperCase().search(keres.toUpperCase())<0){
+                $(this).hide();
+                $(this).next('span').hide()
+            }else {
+                $(this).show();
+                $(this).next('span').show();
+            }
+        })
+    });
+    </script>
 {% endblock content %}
