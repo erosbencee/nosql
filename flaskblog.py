@@ -40,7 +40,7 @@ def gyogyszer():
     post = request.form
     if 'uj_gyogyszer' in post:
         return redirect(url_for('gyogyszer_felvetele'))
-    gyogyszer_neve = request.args.get('gyogyszer_neve', '').strip()
+    gyogyszer_neve = post.get('gyogyszer_neve', '').strip()
     print(gyogyszer_neve)
     talalati_lista_darab=gyogyszerek.find({'nev': {'$regex': '.*'+re.escape(gyogyszer_neve)+'.*','$options': 'i'}}).count()
     gyogyszerek_listaja=gyogyszerek.find({'nev': {'$regex': '.*'+re.escape(gyogyszer_neve)+'.*','$options': 'i'}})
@@ -81,9 +81,11 @@ def gyogyszer_felvetele():
 @app.route('/betegseg',methods = ['GET', 'POST'])
 def betegseg():
     post = request.form
+
     if 'uj_betegseg' in post:
         return redirect(url_for('betegseg_felvetele'))
-    betegsegek_listaja=betegsegek.find()
+    betegseg_neve=post.get('betegseg_neve','').strip()
+    betegsegek_listaja=betegsegek.find({'betegseg_neve': {'$regex': '.*'+re.escape(betegseg_neve)+'.*','$options': 'i'}})
     context = {
         'title': 'Gyógyszerek felvétele',
         'betegsegek': betegsegek_listaja

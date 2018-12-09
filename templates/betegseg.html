@@ -6,6 +6,9 @@
         {% if 'username' in session %}
           <input type="submit" name="uj_betegseg" value="Betegség felvétele"><br>
         {% endif %}
+            Kereső: <input type="text" name="betegseg_neve">
+            <input type="submit" value="Keresés">
+        </form>
     </form><br>
     {% for doc in betegsegek %}
     {{ doc.betegseg_neve }} <br>
