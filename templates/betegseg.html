@@ -10,6 +10,15 @@
             <input type="submit" value="Keresés">
         </form>
     </form><br>
+    {% if betegseg_neve%}
+    Keresett szó: {{ betegseg_neve }} <br>
+
+   
+
+    {% if betegsegek_szama ==0 %}
+    Nem található gyógyszer a keresett szó alapján. :(
+    {% endif %}
+    {% endif %}
     {% for doc in betegsegek %}
     {{ doc.betegseg_neve }} <br>
     {% endfor %}

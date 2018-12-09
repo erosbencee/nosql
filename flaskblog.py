@@ -86,9 +86,12 @@ def betegseg():
         return redirect(url_for('betegseg_felvetele'))
     betegseg_neve=post.get('betegseg_neve','').strip()
     betegsegek_listaja=betegsegek.find({'betegseg_neve': {'$regex': '.*'+re.escape(betegseg_neve)+'.*','$options': 'i'}})
+    betegsegek_szama=betegsegek_listaja.count()
     context = {
-        'title': 'Gyógyszerek felvétele',
-        'betegsegek': betegsegek_listaja
+        'title': 'Betegség felvétele',
+        'betegseg_neve':betegseg_neve,
+        'betegsegek': betegsegek_listaja,
+        'betegsegek_szama': betegsegek_szama
     }
     return render_template('betegseg.html', **context)
 
@@ -129,7 +132,7 @@ def handle_login():
             session['username'] = request.form['username']
             return redirect(url_for('home'))
 
-    return 'Invalid username/password combination'
+    return redirect(url_for('login', hiba="igaz"))
 
 
 @app.errorhandler(404)
