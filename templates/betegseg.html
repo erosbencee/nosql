@@ -1,4 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Betegségek</h1>
+<form method="POST">
+    <h1  style="display: inline-block;">Betegségek</h1>
+    
+        {% if 'username' in session %}
+          <input type="submit" name="uj_betegseg" value="Betegség felvétele"><br>
+        {% endif %}
+    </form><br>
+    {% for doc in betegsegek %}
+    {{ doc.betegseg_neve }} <br>
+    {% endfor %}
+
 {% endblock content %}

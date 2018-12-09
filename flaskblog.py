@@ -37,8 +37,8 @@ def home():
 
 @app.route('/gyogyszer', methods = ['GET', 'POST'])
 def gyogyszer():
-    photo = request.form
-    if 'uj_gyogyszer' in photo:
+    post = request.form
+    if 'uj_gyogyszer' in post:
         return redirect(url_for('gyogyszer_felvetele'))
     gyogyszer_neve = request.args.get('gyogyszer_neve', '').strip()
     print(gyogyszer_neve)
@@ -56,7 +56,7 @@ def gyogyszer():
     return render_template('login_required.html', title = "Bejelentkezés szükséges")
 
 
-@app.route('/gyogyszer_felvetele')
+@app.route('/gyogyszer_felvetele', methods=['GET','POST'] )
 def gyogyszer_felvetele():
     betegsegek_listaja=betegsegek.find()
     context = {
@@ -64,22 +64,50 @@ def gyogyszer_felvetele():
         'betegsegek': betegsegek_listaja
     }
     if 'username' in session:
-        nev=request.args.get('nev');
-        ar=request.args.get('ar');
-        kiszereles=request.args.get('kiszereles');
-        betegseg=request.args.getlist('betegseg');
-        betegseg=list(map(int, betegseg))
-        print("ez: ",nev)
-        if(nev=="None"):
-           gyogyszerek.insert_one({'nev':nev,'ar':int(ar),'kiszereles':int(kiszereles),'betegsegre_jo':betegseg})
+        post = request.form
+        nev=post.get('nev')
+        ar=post.get('ar')
+        kiszereles=post.get('kiszereles')
+        if 'mentes' in post and len(nev)>0 and len(ar)>0 and len(kiszereles)>0:
+            betegseg=post.getlist('betegseg')
+            betegseg=list(map(int, betegseg))
+            print("ez: ",betegseg)
+            gyogyszerek.insert_one({'nev':nev,'ar':int(ar),'kiszereles':int(kiszereles),'betegsegre_jo':betegseg})
         return render_template('gyogyszer_felvetele.html', **context)
             
 
     return render_template('login_required.html', title = "Bejelentkezés szükséges")
 
-@app.route('/betegseg')
-def betegsek():
-    return render_template('betegseg.html', title = "Betegségek")
+@app.route('/betegseg',methods = ['GET', 'POST'])
+def betegseg():
+    post = request.form
+    if 'uj_betegseg' in post:
+        return redirect(url_for('betegseg_felvetele'))
+    betegsegek_listaja=betegsegek.find()
+    context = {
+        'title': 'Gyógyszerek felvétele',
+        'betegsegek': betegsegek_listaja
+    }
+    return render_template('betegseg.html', **context)
+
+@app.route('/betegseg_felvetele', methods=['GET','POST'] )
+def betegseg_felvetele():
+    id=betegsegek.find().count()+1
+    context = {
+        'title': 'Betegség felvétele',
+    }
+    if 'username' in session:
+        post = request.form
+        nev=post.get('nev')
+        leiras=post.get('leiras')
+        if 'mentes' in post and len(nev)>0 and len(leiras)>0:
+            betegsegek.insert_one({'_id': id,'betegseg_neve':nev,'leiras':leiras})
+        return render_template('betegseg_felvetele.html', **context)
+            
+
+    return render_template('login_required.html', title = "Bejelentkezés szükséges")
+
+
 
 
 @app.route('/login', methods = ['GET', 'POST'])

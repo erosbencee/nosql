@@ -2,7 +2,9 @@
 {% block content %}
 <form method="POST">
     <h1 style="display: inline-block">Gyógyszerek</h1> 
+    {% if 'username' in session %}
     <input type="submit" name="uj_gyogyszer" value="Gyógyszer felvétele"><br>
+    {% endif %}
 </form>
 <form>
     Kereső: <input type="text" name="gyogyszer_neve">
