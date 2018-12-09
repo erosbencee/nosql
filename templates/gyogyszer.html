@@ -1,26 +1,32 @@
 {% extends "layout.html" %}
 {% block content %}
 <form method="POST">
-    <h1 style="display: inline-block">Gyógyszerek</h1> 
+    <h1 style="display: inline-block">Gyógyszerek</h1>
     {% if 'username' in session %}
-    <input type="submit" name="uj_gyogyszer" value="Gyógyszer felvétele"><br>
+        <input type="submit" name="uj_gyogyszer" value="Gyógyszer felvétele" class="btn btn-lg btn-outline-success float-right"><br>
     {% endif %}
 </form>
 <form method="POST">
     Kereső: <input type="text" name="gyogyszer_neve">
-    <input type="submit" value="Keresés">
-</form>
+    <input type="submit" value="Keresés" class="btn btn-primary">
+</form><br>
     {% if gyogyszer_neve%}
-    Keresett szó: {{ gyogyszer_neve }} <br>
+    <p class="font-weight-bold">Keresett szó: <span class="font-weight-normal">{{ gyogyszer_neve }}</span></p>
 
    
 
     {% if gyogyszerek_listaja.count() ==0 %}
-    Nem található gyógyszer a keresett szó alapján. :(
+    <p class="text-danger">Nem található gyógyszer a keresett szó alapján. :(</p>
     {% endif %}
     {% endif %}
     {% for doc in gyogyszerek_listaja %}
-    {{ doc.nev }} <br>
+    <div class="card border-success mb-3 col-md-10">
+        <div class="card-body">
+            <h4 class="card-title">{{ doc.nev }}</h4>
+            <p class="card-text">Kiszerelés: {{ doc.kiszereles }}x</p>
+            <p class="card-text text-danger text-right lead">{{ doc.ar }} Ft</p>
+        </div>
+    </div>
     {% endfor %}
     
 {% endblock content %}

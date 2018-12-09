@@ -4,15 +4,15 @@
     <form method="POST">
          <div class="form-group">
              <label>Név:</label>
-             <input class="form-control" required type="text" name="nev">
+             <input class="form-control" required type="text" name="nev" placeholder="Gyógyszer megnevezése">
          </div>
          <div class="form-group">
                 <label>Ár:</label>
-                <input class="form-control" required type="number" name="ar">
+                <input class="form-control" required type="number" name="ar" placeholder="Gyógyszer egységára">
             </div>
          <div class="form-group">
                 <label>Kiszerelés:</label>
-                <input class="form-control" required type="number" name="kiszereles">
+                <input class="form-control" required type="number" name="kiszereles" placeholder="Egy csomag darabszáma">
             </div>
             <div class="form-group">
                     <label>Betegségek, amikre jó:</label>
@@ -22,8 +22,8 @@
                     {% endfor %}
                 </div>
                 
-    <input name="mentes" type="submit" value="Mentés">
-</form>
+    <input name="mentes" type="submit" value="Mentés" class="btn btn-lg btn-success">
+</form><br>
     {% if gyogyszer_neve%}
     {{ gyogyszer_neve }}
 

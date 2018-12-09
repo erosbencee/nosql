@@ -3,17 +3,17 @@
     <h1>Betegség felvétele</h1>
     <form method="POST">
          <div class="form-group">
-             <label>Betegség:</label>
-             <input class="form-control" required type="text" name="nev">
+             <label>Betegség adatai:</label>
+             <input class="form-control" required type="text" name="nev" placeholder="Betegség megnevezése">
          </div>
          <div class="form-group">
                 <label>Leírás:</label>
-                <textarea class="form-control" required name="leiras"></textarea>
+                <textarea class="form-control" required name="leiras" placeholder="Betegség leírása"></textarea>
             </div>
         
                 
-    <input name="mentes" type="submit" value="Mentés">
-</form>
+    <input name="mentes" type="submit" value="Mentés" class="btn btn-lg btn-success">
+</form><br>
     {% if gyogyszer_neve%}
     {{ gyogyszer_neve }}
 

@@ -2,25 +2,29 @@
 {% block content %}
 <form method="POST">
     <h1  style="display: inline-block;">Betegségek</h1>
-    
-        {% if 'username' in session %}
-          <input type="submit" name="uj_betegseg" value="Betegség felvétele"><br>
-        {% endif %}
-            Kereső: <input type="text" name="betegseg_neve">
-            <input type="submit" value="Keresés">
-        </form>
+    {% if 'username' in session %}
+        <input type="submit" name="uj_betegseg" value="Betegség felvétele" class="btn btn-lg btn-outline-success float-right"><br>
+    {% endif %}
+    <br>
+        Kereső: <input type="text" name="betegseg_neve">
+        <input type="submit" value="Keresés" class="btn btn-primary">
     </form><br>
     {% if betegseg_neve%}
-    Keresett szó: {{ betegseg_neve }} <br>
+    <p class="font-weight-bold">Keresett szó: <span class="font-weight-normal">{{ betegseg_neve }} </span></p>
 
    
 
     {% if betegsegek_szama ==0 %}
-    Nem található gyógyszer a keresett szó alapján. :(
+    <p class="text-danger">Nem található betegség a keresett szó alapján. :(</p>
     {% endif %}
     {% endif %}
     {% for doc in betegsegek %}
-    {{ doc.betegseg_neve }} <br>
+    <div class="card border-info mb-3 col-md-10">
+        <div class="card-body">
+                <h4 class="card-title">{{ doc.betegseg_neve }}</h4>
+                <p class="card-text">{{ doc.leiras }}</p>
+        </div>
+    </div>
     {% endfor %}
 
 {% endblock content %}
