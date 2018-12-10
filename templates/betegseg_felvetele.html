@@ -1,18 +1,36 @@
 {% extends "layout.html" %}
 {% block content %}
+{% set modositas=False %}
+{% if "modositas" in request.form %}
+{% set modositas=True %}
+{% endif %}
+{% if modositas==False %}
     <h1>Betegség felvétele</h1>
+{% else %}
+    <h1>Betegség módosítása</h1>
+{% endif %}
+{{modositando}}
     <form method="POST" action="{{ url_for('betegseg') }}">
          <div class="form-group">
              <label>Betegség adatai:</label>
-             <input class="form-control" required type="text" name="nev" placeholder="Betegség megnevezése">
+             <input class="form-control" required type="text" name="nev" placeholder="Betegség megnevezése"
+             {% if(modositas==True) %}
+             value="{{modositando.betegseg_neve}}"
+             {% endif %}>
          </div>
          <div class="form-group">
                 <label>Leírás:</label>
-                <textarea class="form-control" required name="leiras" placeholder="Betegség leírása"></textarea>
+                <textarea style="white-space:pre;" class="form-control" required name="leiras" placeholder="Betegség leírása">{% if(modositas==True) %}{{modositando.leiras}}{% endif %}
+                </textarea>
             </div>
         
                 
-    <input name="mentes" type="submit" value="Mentés" class="btn btn-lg btn-success">
+            <button name="mentes" type="submit" class="btn btn-lg btn-success" {% if(modositas!=True) %}
+            value="beszuras"
+            {% else %}
+            value={{ modositando['_id'] }}
+            {% endif %} 
+            >Mentés</button>
 </form><br>
     {% if gyogyszer_neve%}
     {{ gyogyszer_neve }}

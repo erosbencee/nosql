@@ -43,7 +43,7 @@
     <button name="mentes" type="submit" class="btn btn-lg btn-success" {% if(modositas!=True) %}
     value="beszuras"
     {% else %}
-    value={{ modositando['_id'] }}
+    value={{ modositando['_id']|int }}
     {% endif %} 
     >Mentés</button>
 </form><br>

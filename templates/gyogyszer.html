@@ -16,9 +16,13 @@
     Az adatok sikeresen törölve lettek.
 </div>
 {% endif %}
-<form method="POST" action="#">
-    Kereső: <input type="text" name="gyogyszer_neve">
-    <input type="submit" value="Keresés" class="btn btn-primary">
+<form method="POST" action="#" class="form-inline">
+    Kereső: <input type="text" name="gyogyszer_neve" class="form-control mr-2">
+    <select name="tipus" class="form-control mr-2">
+        <option value="1">Gyógyszer neve</option>
+        <option value="2">Betegségre ajánlott</option>
+    </select>
+    <input type="submit" value="Keresés" class="btn btn-primary form-control mr-2">
 </form><br>
     {% if gyogyszer_neve%}
     <p class="font-weight-bold">Keresett szó: <span class="font-weight-normal">{{ gyogyszer_neve }}</span></p>
