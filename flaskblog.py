@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, request, session, redirect
 import bcrypt
 import pymongo
 import re
+from random import *
 
 app = Flask(__name__)
 
@@ -11,28 +12,29 @@ db = connection.patika
 registered = db.felhasznalok
 gyogyszerek=db.gyogyszerek
 betegsegek=db.betegsegek
+hirek = db.hirek
 
-posts = [
-    {
-        'author': 'HáziPatika',
-        'title': 'Miért ennyire gyakori az ízületi kopás?',
-        'content': 'Az ízületi kopás - más néven arthrosis - világszerte a legelterjedtebb ízületi megbetegedés, és az egyik leggyakoribb probléma az időseknél. Bár tipikusan az 50 feletti korosztályban nő meg az előfordulása (75 éves kor felett pedig már szinte mindenkit érint), a probléma egyre gyakrabban jelentkezik már a 20-as és 30-as éveikben lévőknél. Összességében Magyarországon minden negyedik-ötödik ember szenved miatta valamilyen mértékben. Miért ilyen gyakori ez a betegség, és mit tehetünk a megelőzésért?',
-        'date_posted': '2018. november 13.'
-    },
-    {
-        'author': '24.hu',
-        'title': 'Életet is menthetnek a drónok',
-        'content': 'A hagyományos szállítási módszerek nem a legmegfelelőbbek a szervre várók számára: ha valakinek sürgősen lenne rá szüksége, nem mindig áll a közelben készenlétben megfelelő. Ezen a helyzeten segíthetne az, ha nem autóval, hanem drónokkal szállítanák a donorok szerveit a helyszínekre, legalább is egy friss kutatás szerint. ',
-        'date_posted': '2018. november 12.'
-    }
-]
+
 
 @app.route('/')
 @app.route('/home')
 def home():
     if (request.args.get('kijelentkezes')==""):
         session.clear()
-    return render_template('home.html', posts = posts)
+
+    hirek_listaja = hirek.find({})
+
+    megjelent_hirek_listaja=[]
+    volt_mar=[]
+    
+    while len(megjelent_hirek_listaja) < 2:
+        j = randint(0,2)
+        if j not in volt_mar:
+            megjelent_hirek_listaja.append(hirek_listaja[j])
+            volt_mar.append(j)
+        
+
+    return render_template('home.html', posts = megjelent_hirek_listaja)
 
 
 @app.route('/gyogyszer', methods = ['GET', 'POST'])
