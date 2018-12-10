@@ -12,6 +12,9 @@
             <h2><a class="article-title" href="{{post.link}}" target="_blank">{{ post.cim }}</a></h2>
             <p class="article-content">{{ post.tartalom }}</p>
         </div>
+        <div class="media-left">
+            <img src="{{post.kep}}" class="media-object" style="width:100px">
+        </div>
     </article>
     {% endfor %}
 {% endblock content %}
