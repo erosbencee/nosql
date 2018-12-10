@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>Betegség felvétele</h1>
-    <form method="POST">
+    <form method="POST" action="{{ url_for('betegseg') }}">
          <div class="form-group">
              <label>Betegség adatai:</label>
              <input class="form-control" required type="text" name="nev" placeholder="Betegség megnevezése">

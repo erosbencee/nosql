@@ -6,6 +6,13 @@
         <input type="submit" name="uj_betegseg" value="Betegség felvétele" class="btn btn-lg btn-outline-success float-right"><br>
     {% endif %}
     <br>
+    {% if 'mentes' in request.form %}
+    <div class="alert alert-success">
+            A megadott betegség rögzítésre került.
+    </div>
+        
+    {% endif %}
+    <br>
         Kereső: <input type="text" name="betegseg_neve">
         <input type="submit" value="Keresés" class="btn btn-primary">
     </form><br>
