@@ -115,6 +115,12 @@ def betegseg_felvetele():
     return render_template('login_required.html', title = "Bejelentkezés szükséges")
 
 
+#@app.route('/singup', methods = ['GET', 'POST'])
+#def login():
+    
+
+#    return render_template('valami.html')
+
 
 
 @app.route('/login', methods = ['GET', 'POST'])
