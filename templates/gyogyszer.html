@@ -37,8 +37,10 @@
     {% for doc in gyogyszerek_listaja %}
     <div class="card border-success mb-3 col-md-10">
         <div class="card-body">
+                {% if 'username' in session %}
                 <button type="button" class="btn btn-danger float-right" name="torles" value="{{doc._id}}" onclick="myFunction(this)">Törlés</button>  
                 <button type="button" class="btn btn-info float-right mr-1" name=modositas value="{{doc._id}}" onclick="modosit(this)" >Módosítás</button>       
+                {% endif %}
             <h4 class="card-title">{{ doc.nev }}</h4>
             
             <p class="card-text">Kiszerelés: {{ doc.kiszereles }}x</p>
