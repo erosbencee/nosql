@@ -69,12 +69,10 @@
                 var x = document.createElement("INPUT");
                 x.setAttribute("type", "text");
                 x.setAttribute("value",id);
-                alert(id);
                 x.setAttribute("name","modositas");
                 x.setAttribute("hidden","true");
                 document.getElementById("modositas").appendChild(x);
                 document.getElementById("modositas").action="{{ url_for('betegseg_felvetele') }}";
-                alert(id)
                 $('#modositas').submit();
             }
     </script>

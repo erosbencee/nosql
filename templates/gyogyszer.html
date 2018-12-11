@@ -24,7 +24,7 @@
     </select>
     <input type="submit" value="Keresés" class="btn btn-primary form-control mr-2">
 </form><br>
-    {% if gyogyszer_neve%}
+    {% if gyogyszer_neve %}
     <p class="font-weight-bold">Keresett szó: <span class="font-weight-normal">{{ gyogyszer_neve }}</span></p>
 
    
@@ -33,7 +33,6 @@
     <p class="text-danger">Nem található gyógyszer a keresett szó alapján. :(</p>
     {% endif %}
     {% endif %}
-    {{ request.form }}
     <form method="POST" name="modositas" id="modositas" action="#">
     {% for doc in gyogyszerek_listaja %}
     <div class="card border-success mb-3 col-md-10">

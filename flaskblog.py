@@ -55,12 +55,21 @@ def gyogyszer():
             print("Exception: ", type(e), e)
     gyogyszer_neve = post.get('gyogyszer_neve', '').strip()
     talalati_lista_darab=gyogyszerek.find({'nev': {'$regex': '.*'+re.escape(gyogyszer_neve)+'.*','$options': 'i'}}).count()
-    gyogyszerek_listaja=gyogyszerek.find({'nev': {'$regex': '.*'+re.escape(gyogyszer_neve)+'.*','$options': 'i'}})
+    gyogyszerek_listaja=gyogyszerek.find({'nev': {'$regex': '.*'+re.escape(gyogyszer_neve)+'.*','$options': 'i'}}).sort('nev', pymongo.ASCENDING)
     if 'tipus' in post:
         if post['tipus']=='2':
-            tmp=betegsegek.find_one({'betegseg_neve':gyogyszer_neve})
-            talalati_lista_darab=gyogyszerek.find({'betegsegre_jo' : tmp['_id']}).count() 
-            gyogyszerek_listaja=gyogyszerek.find({'betegsegre_jo' : tmp['_id']})
+            tmp=betegsegek.find_one({'betegseg_neve':{'$regex': '^'+gyogyszer_neve+'$','$options': 'i'}})
+            tmp_db=betegsegek.find({'betegseg_neve':{'$regex': '^'+gyogyszer_neve+'$','$options': 'i'}}).count()
+            if tmp_db>0:
+                talalati_lista_darab=gyogyszerek.find({'betegsegre_jo' : tmp['_id']}).count() 
+                gyogyszerek_listaja=gyogyszerek.find({'betegsegre_jo' : tmp['_id']})
+            else:
+                talalati_lista_darab=0
+                gyogyszerek_listaja=gyogyszerek.find({'betegsegre_jo' : -5})
+            if len(gyogyszer_neve)==0:
+                talalati_lista_darab=gyogyszerek.find().count() 
+                gyogyszerek_listaja=gyogyszerek.find()
+            
     
     
     context = {
@@ -91,7 +100,7 @@ def gyogyszer():
 
 @app.route('/gyogyszer_felvetele', methods=['GET','POST'] )
 def gyogyszer_felvetele():
-    betegsegek_listaja=betegsegek.find()
+    betegsegek_listaja=betegsegek.find().sort('betegseg_neve', pymongo.ASCENDING)
     modositando=0;
     if 'modositas' in request.form:
         modositando=gyogyszerek.find_one({'_id': ObjectId(request.form['modositas'])})
@@ -124,7 +133,7 @@ def betegseg():
         id=int(id)
         betegsegek_listaja=betegsegek.find({'_id':id,'betegseg_neve': {'$regex': '.*'+re.escape(betegseg_neve)+'.*','$options': 'i'}})
     else:
-        betegsegek_listaja=betegsegek.find({'betegseg_neve': {'$regex': '.*'+re.escape(betegseg_neve)+'.*','$options': 'i'}})
+        betegsegek_listaja=betegsegek.find({'betegseg_neve': {'$regex': '.*'+re.escape(betegseg_neve)+'.*','$options': 'i'}}).sort('betegseg_neve', pymongo.ASCENDING)
     betegsegek_szama=betegsegek_listaja.count()
     context = {
         'title': 'Betegség felvétele',

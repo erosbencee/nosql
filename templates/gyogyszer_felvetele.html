@@ -9,7 +9,6 @@
 {% else %}
     <h1>Gyógyszer módosítása</h1>
 {% endif %}
-{{modositando}}
     <form method="POST" action="{{ url_for('gyogyszer') }}">
          <div class="form-group">
              <label>Név:</label>
@@ -43,7 +42,7 @@
     <button name="mentes" type="submit" class="btn btn-lg btn-success" {% if(modositas!=True) %}
     value="beszuras"
     {% else %}
-    value={{ modositando['_id']|int }}
+    value={{ modositando['_id'] }}
     {% endif %} 
     >Mentés</button>
 </form><br>
