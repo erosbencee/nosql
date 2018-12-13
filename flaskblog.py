@@ -41,6 +41,7 @@ def home():
 @app.route('/gyogyszer', methods = ['GET', 'POST'])
 def gyogyszer():
     post = request.form
+    print("ez:",post)
     betegseg=betegsegek.find()
     betegsegek_listaja={}
     for tmp in betegseg:
@@ -50,13 +51,27 @@ def gyogyszer():
     if 'torles' in post:
         try:
             valami=gyogyszerek.delete_one({'_id': ObjectId(post["torles"])})
-            print('ObjectId("'+post["torles"]+'")')
         except Exception as e:
             print("Exception: ", type(e), e)
     gyogyszer_neve = post.get('gyogyszer_neve', '').strip()
-    print(gyogyszer_neve)
     talalati_lista_darab=gyogyszerek.find({'nev': {'$regex': '.*'+re.escape(gyogyszer_neve)+'.*','$options': 'i'}}).count()
-    gyogyszerek_listaja=gyogyszerek.find({'nev': {'$regex': '.*'+re.escape(gyogyszer_neve)+'.*','$options': 'i'}})
+    gyogyszerek_listaja=gyogyszerek.find({'nev': {'$regex': '.*'+re.escape(gyogyszer_neve)+'.*','$options': 'i'}}).sort('nev', pymongo.ASCENDING)
+    if 'tipus' in post:
+        if post['tipus']=='2':
+            tmp=betegsegek.find_one({'betegseg_neve':{'$regex': '^'+gyogyszer_neve+'$','$options': 'i'}})
+            tmp_db=betegsegek.find({'betegseg_neve':{'$regex': '^'+gyogyszer_neve+'$','$options': 'i'}}).count()
+            if tmp_db>0:
+                talalati_lista_darab=gyogyszerek.find({'betegsegre_jo' : tmp['_id']}).count() 
+                gyogyszerek_listaja=gyogyszerek.find({'betegsegre_jo' : tmp['_id']})
+            else:
+                talalati_lista_darab=0
+                gyogyszerek_listaja=gyogyszerek.find({'betegsegre_jo' : -5})
+            if len(gyogyszer_neve)==0:
+                talalati_lista_darab=gyogyszerek.find().count() 
+                gyogyszerek_listaja=gyogyszerek.find()
+            
+    
+    
     context = {
         'title': 'Gyógyszerek',
         'gyogyszer_neve': gyogyszer_neve,
@@ -85,7 +100,7 @@ def gyogyszer():
 
 @app.route('/gyogyszer_felvetele', methods=['GET','POST'] )
 def gyogyszer_felvetele():
-    betegsegek_listaja=betegsegek.find()
+    betegsegek_listaja=betegsegek.find().sort('betegseg_neve', pymongo.ASCENDING)
     modositando=0;
     if 'modositas' in request.form:
         modositando=gyogyszerek.find_one({'_id': ObjectId(request.form['modositas'])})
@@ -103,16 +118,22 @@ def gyogyszer_felvetele():
 @app.route('/betegseg',methods = ['GET', 'POST'])
 def betegseg():
     post = request.form
-    print("ez:",post)
+    
     if 'uj_betegseg' in post:
         return redirect(url_for('betegseg_felvetele'))
     betegseg_neve=post.get('betegseg_neve','').strip()
     id=request.args.get('id')
+    if 'torles' in post:
+        try:
+            valami=betegsegek.delete_one({'_id': int(post["torles"])})
+            print(post["torles"])
+        except Exception as e:
+            print("Exception: ", type(e), e)
     if 'id' in request.args:
         id=int(id)
         betegsegek_listaja=betegsegek.find({'_id':id,'betegseg_neve': {'$regex': '.*'+re.escape(betegseg_neve)+'.*','$options': 'i'}})
     else:
-        betegsegek_listaja=betegsegek.find({'betegseg_neve': {'$regex': '.*'+re.escape(betegseg_neve)+'.*','$options': 'i'}})
+        betegsegek_listaja=betegsegek.find({'betegseg_neve': {'$regex': '.*'+re.escape(betegseg_neve)+'.*','$options': 'i'}}).sort('betegseg_neve', pymongo.ASCENDING)
     betegsegek_szama=betegsegek_listaja.count()
     context = {
         'title': 'Betegség felvétele',
@@ -124,17 +145,28 @@ def betegseg():
         post = request.form
         nev=post.get('nev')
         leiras=post.get('leiras')
-        id=betegsegek.find().sort('_id', pymongo.DESCENDING).limit(0)
-        id=id[0]['_id']+1
+        
         if 'mentes' in post and len(nev)>0 and len(leiras)>0:
-            betegsegek.insert_one({'_id': id,'betegseg_neve':nev,'leiras':leiras})
+            if post['mentes']=="beszuras":
+                id=betegsegek.find().sort('_id', pymongo.DESCENDING).limit(0)
+                id=id[0]['_id']+1
+                betegsegek.insert_one({'_id': id,'betegseg_neve':nev,'leiras':leiras})
+            else:
+                betegsegek.replace_one({'_id': float(post['mentes'])},{'_id': float(post['mentes']),'betegseg_neve':nev,'leiras':leiras})
+          
+           
     return render_template('betegseg.html', **context)
 
 @app.route('/betegseg_felvetele', methods=['GET','POST'] )
 def betegseg_felvetele():
+    modositando=0
+    post = request.form
+    if 'modositas' in request.form:
+        modositando=betegsegek.find_one({'_id': int(post['modositas'])})
     
     context = {
         'title': 'Betegség felvétele',
+        'modositando': modositando
     }
     
     if 'username' in session:

@@ -16,11 +16,15 @@
     Az adatok sikeresen törölve lettek.
 </div>
 {% endif %}
-<form method="POST" action="#">
-    Kereső: <input type="text" name="gyogyszer_neve">
-    <input type="submit" value="Keresés" class="btn btn-primary">
+<form method="POST" action="#" class="form-inline">
+    Kereső: <input type="text" name="gyogyszer_neve" class="form-control mr-2">
+    <select name="tipus" class="form-control mr-2">
+        <option value="1">Gyógyszer neve</option>
+        <option value="2">Betegségre ajánlott</option>
+    </select>
+    <input type="submit" value="Keresés" class="btn btn-primary form-control mr-2">
 </form><br>
-    {% if gyogyszer_neve%}
+    {% if gyogyszer_neve %}
     <p class="font-weight-bold">Keresett szó: <span class="font-weight-normal">{{ gyogyszer_neve }}</span></p>
 
    
@@ -29,13 +33,14 @@
     <p class="text-danger">Nem található gyógyszer a keresett szó alapján. :(</p>
     {% endif %}
     {% endif %}
-    {{ request.form }}
     <form method="POST" name="modositas" id="modositas" action="#">
     {% for doc in gyogyszerek_listaja %}
     <div class="card border-success mb-3 col-md-10">
         <div class="card-body">
+                {% if 'username' in session %}
                 <button type="button" class="btn btn-danger float-right" name="torles" value="{{doc._id}}" onclick="myFunction(this)">Törlés</button>  
                 <button type="button" class="btn btn-info float-right mr-1" name=modositas value="{{doc._id}}" onclick="modosit(this)" >Módosítás</button>       
+                {% endif %}
             <h4 class="card-title">{{ doc.nev }}</h4>
             
             <p class="card-text">Kiszerelés: {{ doc.kiszereles }}x</p>
