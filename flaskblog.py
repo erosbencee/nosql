@@ -180,17 +180,19 @@ def betegseg_felvetele():
 @app.route('/reg', methods = ['GET', 'POST'])
 def reg():
     if request.method == 'POST':
-        users = felhasznalok
+        users = db.felhasznalok
         existing_user = users.find_one({'nev' : request.form['username']})
 
         if existing_user is None:
             hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
-            users.insert({'name' : request.form['username'], 'password' : hashpass})
+            users.insert({'nev' : request.form['username'], 'jelszo' : hashpass})
             session['username'] = request.form['username']
-            return redirect(url_for('index'))
-        return 'That username already exists!'
+            return redirect(url_for('reg',siker=1))
+        return redirect(url_for('reg',siker=0))
     
     return render_template('reg.html')
+
+
 
 
 

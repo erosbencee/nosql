@@ -3,11 +3,17 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
-            <form method="POST" action="{{ url_for('handle_login') }}">
-                {% if 'hiba' in request.args %}  
-                <div class="alert alert-danger">
-                    Rossz felhasználónév vagy jelszó
-                </div>
+            <form method="POST">
+                {% if request.args.get('siker') %}
+                      {% if request.args.get('siker')=='1' %} 
+                          <div class="alert alert-success">
+                               Sikeres regisztráció és bejelentkezés.
+                          </div>
+                      {% else %}
+                          <div class="alert alert-danger">
+                               A felhasználónév már létezik.
+                          </div>
+                      {% endif %}
                 {% endif %}
                 <div class="form-group">
                     <label for="exampleInputEmail1">Felhasználónév</label>
@@ -24,3 +30,6 @@
     </div>
 </div>
 {% endblock content %}
+
+
+
