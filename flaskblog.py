@@ -144,11 +144,21 @@ def betegseg_felvetele():
     return render_template('login_required.html', title = "Bejelentkezés szükséges")
 
 
-#@app.route('/singup', methods = ['GET', 'POST'])
-#def login():
-    
 
-#    return render_template('valami.html')
+@app.route('/reg', methods = ['GET', 'POST'])
+def reg():
+    if request.method == 'POST':
+        users = felhasznalok
+        existing_user = users.find_one({'nev' : request.form['username']})
+
+        if existing_user is None:
+            hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
+            users.insert({'name' : request.form['username'], 'password' : hashpass})
+            session['username'] = request.form['username']
+            return redirect(url_for('index'))
+        return 'That username already exists!'
+    
+    return render_template('reg.html')
 
 
 
